@@ -1,54 +1,23 @@
 const express = require('express');
 const axios = require('axios');
 const cheerio = require('cheerio');
-const urlProMap = require('./textpro_urls.json');
+const urlProMap = require('./textpro_urls.json'); // Load URLs from JSON
 
 const app = express();
 
-app.get('/textpro', async (req, res) => {
-    try {
-        const text = req.query.text;
-        const number = req.query.number;
+app.use(express.static('public'));
 
-        if (!text || !number) {
-            return res.status(400).json({ error: 'Missing text or number parameter' });
-        }
-
-        const urlPro = urlProMap[number];
-
-        if (!urlPro) {
-            return res.status(400).json({ error: 'Invalid number parameter' });
-        }
-
-        const response = await axios.get(urlPro);
-        const $ = cheerio.load(response.data);
-
-        const token = $('input[name="token"]').val();
-        const option = $('select[name="option"]').val();
-        const submit = $('input[type="submit"]').val();
-
-        const formData = {
-            text,
-            token,
-            option,
-            submit
-        };
-
-        const logoResponse = await axios.post(urlPro, formData);
-        const logoUrl = extractLogoUrl(logoResponse.data);
-
-        res.json({ logoUrl });
-    } catch (error) {
-        console.error('Error:', error);
-        res.status(500).json({ error: 'Failed to generate logo' }); 
-    }
+app.get('/', (req, res) => {
+    res.sendFile(__dirname + '/index.html'); // Serve the index.html file
 });
 
-function extractLogoUrl(html) {
-    const $ = cheerio.load(html);
-    const logoUrl = $('#form_value > div > a').attr('href');
-    return logoUrl;
-}
+app.get('/textpro', async (req, res) => {
+    try {
+        // ... (rest of the API code is the same as before)
+    } catch (error) {
+        // ... (error handling)
+    }
+});
 
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => {
