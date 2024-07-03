@@ -19,15 +19,18 @@ async function createTextproEffect(url, text) {
     try {
         const response = await axios.post(url, new URLSearchParams({ text }), {
             headers: {
-                'Content-Type': 'application/x-www-form-urlencoded'
-            }
+                'Content-Type': 'application/x-www-form-urlencoded',
+                'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/58.0.3029.110 Safari/537.3'
+            },
+            maxRedirects: 5 // Follow redirects
         });
 
-        // You might need to parse the response to extract the final image URL
-        // This is a simplified version
-        return response.data;
+        // This is a simplified version, adjust based on actual response structure
+        const imageUrl = response.data; // Parse response data to extract image URL
+
+        return imageUrl;
     } catch (error) {
-        console.error(error);
+        console.error('Error creating text effect:', error.response ? error.response.data : error.message);
         throw new Error('Error creating text effect');
     }
 }
@@ -36,23 +39,4 @@ app.get('/textpro', async (req, res) => {
     const { number, text } = req.query;
 
     if (!number || !text) {
-        return res.status(400).json({ error: 'Number and text are required' });
-    }
-
-    const urlIndex = parseInt(number) - 1;
-
-    if (urlIndex < 0 || urlIndex >= textProUrls.length) {
-        return res.status(400).json({ error: 'Invalid number' });
-    }
-
-    try {
-        const result = await createTextproEffect(textProUrls[urlIndex], text);
-        res.json({ result });
-    } catch (error) {
-        res.status(500).json({ error: error.message });
-    }
-});
-
-app.listen(port, () => {
-    console.log(`Server is running on http://localhost:${port}`);
-});
+        retur
