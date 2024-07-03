@@ -1,14 +1,14 @@
 {
-  "name": "textpro-logo-maker-api",
+  "name": "textpro-api",
   "version": "1.0.0",
-  "description": "API for generating logos using Textpro",
+  "description": "A Node.js API for interacting with TextPro.me",
   "main": "index.js",
   "scripts": {
     "start": "node index.js"
   },
   "dependencies": {
     "axios": "^1.4.0",
-    "cheerio": "^1.0.0-rc.12",
+    "body-parser": "^1.20.2",
     "express": "^4.18.2"
   }
 }
